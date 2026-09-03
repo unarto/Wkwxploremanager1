@@ -1,0 +1,8 @@
+{
+  "name": "WKW Xplore",
+  "description": "A modular dual-panel Android file manager featuring advanced search, efficient navigation, and robust file management tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

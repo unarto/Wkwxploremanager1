@@ -1,0 +1,44 @@
+<resources>
+    <string name="label_folder_name">Nama folder</string>
+    <string name="dialog_title_create_folder">Folder Baru</string>
+    <string name="btn_create">Buat</string>
+    <string name="btn_cancel">Batal</string>
+
+    <string name="label_new_name">Nama baru</string>
+    <string name="dialog_title_rename">Ubah Nama</string>
+    <string name="btn_rename">Ubah</string>
+
+    <string name="dialog_title_delete_confirmation">Konfirmasi Hapus</string>
+    <string name="msg_confirm_delete_single">Apakah Anda yakin ingin menghapus berkas ini?</string>
+    <string name="msg_confirm_delete_plural">Apakah Anda yakin ingin menghapus %1$d berkas yang dipilih?</string>
+    <string name="btn_delete">Hapus</string>
+
+    <string name="label_free_space">Bebas</string>
+    <string name="cd_expand">Perluas</string>
+    <string name="cd_collapse">Ciutkan</string>
+    <string name="cd_storage">Penyimpanan</string>
+
+    <!-- FileIcon Content Descriptions -->
+    <string name="cd_icon_storage">Penyimpanan Internal</string>
+    <string name="cd_icon_folder">Folder</string>
+    <string name="cd_icon_archive">Arsip</string>
+    <string name="cd_icon_apk">Paket Aplikasi (APK)</string>
+    <string name="cd_icon_image">Gambar</string>
+    <string name="cd_icon_audio">Audio</string>
+    <string name="cd_icon_video">Video</string>
+    <string name="cd_icon_code">Kode</string>
+    <string name="cd_icon_document">Dokumen</string>
+    <string name="cd_icon_file">Berkas</string>
+    <string name="badge_zip">ZIP</string>
+
+    <!-- BreadcrumbBar -->
+    <string name="cd_root_directory">Direktori Utama</string>
+
+    <!-- Storage Format -->
+    <string name="storage_ratio_format">%1$s / %2$s</string>
+    
+    <!-- Background Operations -->
+    <string name="notification_channel_name_operation">Operasi Berkas</string>
+    <string name="notification_channel_desc_operation">Menampilkan progres operasi berkas di latar belakang</string>
+    <string name="op_processing">Memproses Berkas...</string>
+</resources>

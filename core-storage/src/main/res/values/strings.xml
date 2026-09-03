@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_name">Operasi Berkas</string>
+    <string name="notification_channel_desc">Menampilkan progres operasi berkas di latar belakang</string>
+    <string name="notification_title_processing">Memproses Berkas...</string>
+</resources>

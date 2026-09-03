@@ -1,0 +1,177 @@
+<resources>
+    <string name="app_title">WKW Xplore</string>
+    <string name="title_file_manager">Jelajahi</string>
+    <string name="title_settings">Pengaturan</string>
+    <string name="cd_back">Kembali</string>
+
+    <string name="toast_copied_to_clipboard">%1$s disalin ke papan klip</string>
+    <string name="label_directory_folder">Direktori Folder</string>
+    <string name="cd_close">Tutup</string>
+    <string name="cd_copy_path">Salin Path</string>
+    <string name="title_file_location">Lokasi Berkas</string>
+    <string name="title_basic_info">Informasi Dasar</string>
+    <string name="label_size">Ukuran</string>
+    <string name="label_last_modified">Terakhir Diubah</string>
+    <string name="label_file_type">Tipe Berkas</string>
+    <string name="title_permissions_attributes">Izin &amp; Atribut (Permissions)</string>
+    <string name="label_posix_format">Format POSIX</string>
+    <string name="title_checksum_hash">Checksum Hash (MD5 / SHA)</string>
+    <string name="btn_calculate_checksum">Hitung Checksum (MD5 / SHA-256)</string>
+    <string name="msg_calculating_hash">Menghitung hash berkas...</string>
+    <string name="msg_checksum_error">Gagal: %1$s</string>
+    <string name="btn_retry">Coba Lagi</string>
+
+    <string name="cd_app_settings">Pengaturan</string>
+    <string name="cd_refresh">Muat Ulang</string>
+    <string name="cd_search">Cari</string>
+    <string name="cd_layout_mode">Mode Tampilan</string>
+    <string name="cd_sort_options">Pilihan Urutan</string>
+    <string name="cd_tree_view">Pohon Berkas</string>
+
+    <string name="cd_new_folder">Folder Baru</string>
+    <string name="cd_copy">Salin</string>
+    <string name="cd_move">Pindah</string>
+    <string name="cd_rename">Ubah Nama</string>
+    <string name="cd_delete">Hapus</string>
+    <string name="cd_info">Informasi</string>
+
+    <string name="label_up_dir">Up dir</string>
+    <string name="label_new_folder">Folder Baru</string>
+    <string name="label_rename">Ubah Nama</string>
+    <string name="label_paste">Tempel</string>
+    <string name="label_move">Pindah</string>
+    <string name="label_detail">Rincian</string>
+    <string name="label_copy_count">Salin (%1$d)</string>
+    <string name="label_move_count">Pindah (%1$d)</string>
+    <string name="label_delete_count">Hapus (%1$d)</string>
+
+    <string name="msg_empty_directory">Folder ini kosong</string>
+    <string name="msg_error_loading">Gagal memuat isi folder</string>
+    <string name="msg_loading_directory">Memuat isi folder...</string>
+
+    <string name="title_storage_permission">Izin Akses Penyimpanan</string>
+    <string name="msg_storage_permission_required">Aplikasi membutuhkan izin pengelolaan penyimpanan untuk dapat menampilkan dan mengelola berkas Anda.</string>
+    <string name="btn_grant_permission">Berikan Izin</string>
+
+    <string name="title_processing_operation">Memproses Operasi...</string>
+    <string name="btn_cancel_operation">Batal</string>
+
+    <!-- Settings Options -->
+    <string name="group_theme_display">Tema Tampilan</string>
+    <string name="theme_option_dark">Gelap (Dark Mode)</string>
+    <string name="theme_option_light">Terang (Light Mode)</string>
+    <string name="theme_option_system">Ikuti Sistem</string>
+    <string name="group_language">Bahasa / Language</string>
+    <string name="lang_option_indonesian">Bahasa Indonesia</string>
+    <string name="lang_option_english">English</string>
+    <string name="lang_option_system">Sistem (Default)</string>
+    <string name="group_filesystem">Akses Sistem Berkas</string>
+    <string name="fs_option_normal">Normal (SAF/Media)</string>
+    <string name="fs_option_shizuku">Shizuku</string>
+    <string name="fs_option_root">Root (SU)</string>
+    <string name="fs_option_root_readonly">Hanya-Baca (Root)</string>
+
+    <!-- Selection CD -->
+    <string name="cd_all_items_selected">Seluruh item dipilih</string>
+    <string name="cd_selected">Dipilih</string>
+    <string name="cd_partially_selected">Sebagian dipilih</string>
+    <string name="cd_unselected">Tidak dipilih</string>
+
+    <!-- Checksum Copy -->
+    <string name="cd_copy_checksum">Salin hash %1$s</string>
+    <string name="label_file_path">Path berkas</string>
+    <string name="err_load_file_details">Gagal memuat rincian berkas</string>
+    <string name="err_calculate_checksum">Gagal menghitung checksum berkas</string>
+
+    <!-- Operation Status -->
+    <string name="op_copy_started">Menyalin</string>
+    <string name="op_copy_completed">Penyalinan selesai</string>
+    <string name="op_move_started">Memindahkan</string>
+    <string name="op_move_completed">Pemindahan selesai</string>
+    <string name="op_delete_started">Menghapus</string>
+    <string name="op_delete_completed">Penghapusan selesai</string>
+    <string name="op_create_dir_started">Membuat folder</string>
+    <string name="op_create_dir_completed">Folder berhasil dibuat</string>
+    <string name="op_rename_started">Mengubah nama</string>
+    <string name="op_rename_completed">Perubahan nama selesai</string>
+
+    <!-- Tree Placeholders & Errors -->
+    <string name="tree_empty_directory">Tidak ada berkas untuk ditampilkan</string>
+    <string name="err_unknown_tree_error">Terjadi kesalahan yang tidak diketahui</string>
+
+    <!-- Sort & Hidden Options -->
+    <string name="title_sort_files">Urutkan Berkas</string>
+    <string name="label_sort_by">Urutkan Berdasarkan</string>
+    <string name="label_sort_name">Nama</string>
+    <string name="label_sort_date">Tanggal</string>
+    <string name="label_sort_size">Ukuran</string>
+    <string name="label_sort_type">Tipe</string>
+    <string name="label_sort_direction">Arah Urutan</string>
+    <string name="label_sort_asc">Menaik (A-Z / Lama-Baru)</string>
+    <string name="label_sort_desc">Menurun (Z-A / Baru-Lama)</string>
+    <string name="label_show_hidden">Tersembunyi</string>
+    <string name="cd_show_hidden">Tampilkan Berkas Tersembunyi</string>
+    <string name="btn_apply">Terapkan</string>
+    <!-- Hardcoded UI Strings Extraction -->
+    <string name="label_sd_card">Kartu SD</string>
+    <string name="label_root">Root</string>
+    <string name="label_internal_shared_storage">Penyimpanan bersama internal</string>
+    <string name="label_storage_loading">Penyimpanan...</string>
+    <string name="label_left_panel">PANEL KIRI</string>
+    <string name="label_right_panel">PANEL KANAN</string>
+    <string name="cd_switch_to_panel">Switch to panel</string>
+    <string name="cd_action">Action</string>
+    <string name="title_operation_items">%1$s Items</string>
+    <string name="msg_operation_confirmation">%1$s %2$d items to:\n%3$s?</string>
+    <string name="msg_operation_progress">%1$s...</string>
+
+    <!-- File Detail Dialog -->
+    <string name="tab_file">File</string>
+    <string name="tab_sha_md5">SHA MD5</string>
+    <string name="label_path_colon">Jalur:</string>
+    <string name="label_name_colon">Nama:</string>
+    <string name="label_mime_type_colon">Mime type:</string>
+    <string name="label_size_colon">Ukuran:</string>
+    <string name="label_modify_date_colon">Ubah tanggal:</string>
+    <string name="label_open_with_colon">Dibuka dengan:</string>
+    <string name="label_compatible_apps">Aplikasi yang kompatibel</string>
+    <string name="label_md5_colon">MD5:</string>
+    <string name="label_sha1_colon">SHA1:</string>
+    <string name="label_sha256_colon">SHA256:</string>
+    <string name="cd_copy_value">Salin %1$s</string>
+    <string name="cd_edit_value">Ubah %1$s</string>
+    <string name="cd_clear_app">Hapus aplikasi bawaan</string>
+    <string name="label_index_format">%1$d:</string>
+    <string name="label_byte_unit">Byte</string>
+    <string name="label_default_app">Aplikasi Bawaan</string>
+    <string name="cd_round_icon_detail">Rincian Berkas</string>
+    <string name="msg_no_compatible_apps">Tidak ada aplikasi yang kompatibel</string>
+
+    <string name="label_search_title">Cari Berkas</string>
+    <string name="label_keyword">Kata Kunci (Nama)</string>
+    <string name="label_extension">Ekstensi (cth: .mp4)</string>
+    <string name="label_min_size">Ukuran Min (Byte)</string>
+    <string name="label_max_size">Ukuran Maks (Byte)</string>
+    <string name="btn_search">Cari</string>
+    <string name="msg_searching">Mencari...</string>
+    <string name="msg_no_results">Tidak ada hasil ditemukan.</string>
+    <string name="label_search_results">Hasil Pencarian</string>
+    <string name="label_search_results_query">Hasil pencarian: \'%1$s\'</string>
+    
+    <!-- Link Storage -->
+    <string name="cd_link_storage">Tautkan Penyimpanan</string>
+    <string name="title_link_storage">Tautkan Penyimpanan Aplikasi</string>
+    <string name="msg_link_storage_explanation">Anda dapat menautkan folder dari aplikasi lain (seperti Termux, AndroidIDE) untuk diakses langsung dari Xplore. Silakan pilih folder di layar selanjutnya.</string>
+    <string name="btn_continue">Lanjutkan</string>
+    <string name="cd_remove_link">Hapus Tautan</string>
+
+    <string name="err_not_found">Folder atau berkas tidak ditemukan. (Mungkin Anda belum memberikan akses Root melalui Shizuku, atau belum mengizinkan akses penyimpanan.)</string>
+    <string name="err_access_denied">Akses ditolak.</string>
+    <string name="err_invalid_location">Lokasi tidak valid.</string>
+    <string name="err_invalid_name">Nama tidak valid.</string>
+    <string name="err_already_exists">Berkas sudah ada.</string>
+    <string name="err_io_error">Kesalahan I/O (mungkin memori penuh).</string>
+    <string name="err_not_supported">Operasi tidak didukung.</string>
+    <string name="msg_massive_file_checksum_warning">Berkas berukuran sangat besar. Hitung hash dapat memakan waktu lama dan menghabiskan daya baterai. Anda yakin?</string>
+    <string name="btn_calculate_hash">Hitung Checksum</string>
+</resources>

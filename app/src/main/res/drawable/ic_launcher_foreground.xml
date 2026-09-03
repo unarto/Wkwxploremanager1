@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Left Folder (Orange) -->
+    <path
+        android:fillColor="#FFA726"
+        android:pathData="M30,36 L44,36 L48,41 L60,41 C62.2,41 64,42.8 64,45 L64,68 C64,70.2 62.2,72 60,72 L30,72 C27.8,72 26,70.2 26,68 L26,40 C26,37.8 27.8,36 30,36 Z" />
+    <path
+        android:fillColor="#FFB74D"
+        android:pathData="M30,44 L60,44 C62.2,44 64,45.8 64,48 L64,68 C64,70.2 62.2,72 60,72 L30,72 C27.8,72 26,70.2 26,68 L26,48 C26,45.8 27.8,44 30,44 Z" />
+    
+    <!-- Right Panel / Zip Indicator (Cyan) -->
+    <path
+        android:fillColor="#00BCD4"
+        android:pathData="M52,48 L76,48 C78.2,48 80,49.8 80,52 L80,76 C80,78.2 78.2,80 76,80 L52,80 C49.8,80 48,78.2 48,76 L48,52 C48,49.8 49.8,48 52,48 Z" />
+    <path
+        android:fillColor="#26C6DA"
+        android:pathData="M54,54 L74,54 L74,74 L54,74 Z" />
+
+    <!-- Split arrow / branch line between panels -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M44,58 L48,58 L48,64 L54,64" />
+</vector>
+

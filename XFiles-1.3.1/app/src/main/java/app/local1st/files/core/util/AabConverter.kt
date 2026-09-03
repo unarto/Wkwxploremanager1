@@ -1,0 +1,208 @@
+package app.local1st.files.core.util
+
+import android.content.Context
+import android.os.Build
+import com.android.bundle.Devices.DeviceSpec
+import com.android.tools.build.bundletool.commands.BuildApksCommand
+import com.android.tools.build.bundletool.commands.ExtractApksCommand
+import com.android.tools.build.bundletool.model.SigningConfiguration
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.math.BigInteger
+import java.security.KeyFactory
+import java.security.KeyPairGenerator
+import java.security.PrivateKey
+import java.security.SecureRandom
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
+import java.security.spec.PKCS8EncodedKeySpec
+import java.util.Date
+import java.util.UUID
+import java.util.concurrent.CancellationException
+
+object AabConverter {
+
+    fun install(
+        context: Context,
+        bundle: File,
+        label: String,
+        progress: InstallProgress = InstallProgress(),
+        onResult: ((success: Boolean) -> Unit)? = null,
+        onSigningKeyRegenerated: (() -> Unit)? = null,
+    ): Int {
+        val app = context.applicationContext
+        val workDir = File(app.cacheDir, "aab-install-${UUID.randomUUID()}")
+        if (!workDir.mkdirs()) throw IllegalStateException("Cannot create bundle work directory")
+        try {
+            progress.onPhase(InstallPhase.BUILDING_APKS)
+            val deviceSpec = deviceSpec(app)
+            val signingResult = signingConfiguration(app)
+            if (signingResult.regenerated) onSigningKeyRegenerated?.invoke()
+            val signing = signingResult.configuration
+            val apkFiles = try {
+                buildAndExtract(bundle, workDir, deviceSpec, signing, universal = false, progress = progress)
+            } catch (first: Exception) {
+                // Bundletool can't be interrupted mid-call, so cancellation surfaces here as a
+                // failure of the device-spec build. Retrying universal would burn minutes more.
+                if (first is CancellationException) throw first
+                workDir.listFiles()?.forEach { it.deleteRecursively() }
+                try {
+                    buildAndExtract(bundle, workDir, deviceSpec, signing, universal = true, progress = progress)
+                } catch (second: Exception) {
+                    second.addSuppressed(first)
+                    throw second
+                } catch (second: LinkageError) {
+                    // Universal mode merges dex through bundletool's D8, whose internals the
+                    // vendored jar strips (see vendor/bundletool-shaded); only multi-module
+                    // bundles with minSdk < 21 reach it. That arrives as a LinkageError, which
+                    // the caller's Exception handler would miss — report the failure instead.
+                    throw IllegalStateException(
+                        "Cannot build APKs for this device, and the universal fallback needs " +
+                            "dex merging that this build omits",
+                        first,
+                    )
+                }
+            }
+            if (apkFiles.isEmpty()) throw IllegalStateException("Bundletool produced no installable APK")
+            return ApkInstaller.install(
+                app,
+                label,
+                apkFiles.map { apk ->
+                    ApkInstaller.ApkSource(apk.name, apk.length()) { FileInputStream(apk) }
+                },
+                progress,
+                onResult,
+            )
+        } finally {
+            workDir.deleteRecursively()
+        }
+    }
+
+    private fun buildAndExtract(
+        bundle: File,
+        workDir: File,
+        deviceSpec: DeviceSpec,
+        signing: SigningConfiguration,
+        universal: Boolean,
+        progress: InstallProgress,
+    ): List<File> {
+        // Each bundletool call runs to completion once started; these are the only points where
+        // a cancelled job can bail out before paying for the next one.
+        if (progress.isCancelled()) throw CancellationException("Install cancelled")
+        val apksArchive = File(workDir, if (universal) "universal.apks" else "device.apks")
+        val builder = BuildApksCommand.builder()
+            .setBundlePath(bundle.toPath())
+            .setOutputFile(apksArchive.toPath())
+            .setOverwriteOutput(true)
+            .setSigningConfiguration(signing)
+            .setAapt2Command(InProcessAapt2Command)
+            .setEnableSparseEncoding(false)
+            .setInjectMinSdk(false)
+        if (universal) {
+            builder.setApkBuildMode(BuildApksCommand.ApkBuildMode.UNIVERSAL)
+        } else {
+            builder.setDeviceSpec(deviceSpec)
+        }
+        builder.build().execute()
+
+        if (progress.isCancelled()) throw CancellationException("Install cancelled")
+        val outputDir = File(workDir, if (universal) "universal" else "device")
+        val paths = ExtractApksCommand.builder()
+            .setApksArchivePath(apksArchive.toPath())
+            .setDeviceSpec(deviceSpec)
+            .setOutputDirectory(outputDir.toPath())
+            .build()
+            .execute()
+        return paths.map { it.toFile() }.filter { it.isFile && it.extension.equals("apk", true) }
+    }
+
+    private fun deviceSpec(context: Context): DeviceSpec {
+        val locales = context.resources.configuration.locales
+        val languageTags = buildList {
+            for (i in 0 until locales.size()) add(locales[i].toLanguageTag())
+        }.filter { it.isNotBlank() }.distinct()
+        return DeviceSpec.newBuilder()
+            .addAllSupportedAbis(Build.SUPPORTED_ABIS.asIterable())
+            .setScreenDensity(context.resources.displayMetrics.densityDpi)
+            .setSdkVersion(Build.VERSION.SDK_INT)
+            .addAllSupportedLocales(languageTags)
+            .build()
+    }
+
+    private data class SigningResult(
+        val configuration: SigningConfiguration,
+        val regenerated: Boolean,
+    )
+
+    @Synchronized
+    private fun signingConfiguration(context: Context): SigningResult {
+        val storeFile = File(context.filesDir, SIGNING_KEY_FILE)
+        var regenerated = false
+        if (storeFile.isFile) {
+            try {
+                val (privateKey, certificate) = loadSigningKey(storeFile)
+                return SigningResult(
+                    SigningConfiguration.builder().setSignerConfig(privateKey, certificate).build(),
+                    regenerated = false,
+                )
+            } catch (_: Exception) {
+                if (!storeFile.delete()) throw IllegalStateException("Cannot replace the invalid bundle signing key")
+                regenerated = true
+            }
+        }
+
+        val keyPair = KeyPairGenerator.getInstance("RSA").apply { initialize(2048) }.generateKeyPair()
+        val now = System.currentTimeMillis()
+        val certificate = SelfSignedCertificate.create(
+            keyPair = keyPair,
+            commonName = "XFiles AAB Installer",
+            notBefore = Date(now - DAY_MILLIS),
+            notAfter = Date(now + CERT_VALIDITY_MILLIS),
+            serial = BigInteger(159, SecureRandom()).setBit(158),
+        )
+        val temp = File(context.filesDir, "$SIGNING_KEY_FILE.tmp")
+        DataOutputStream(FileOutputStream(temp).buffered()).use { output ->
+            output.writeInt(KEY_FILE_VERSION)
+            output.writeInt(keyPair.private.encoded.size)
+            output.write(keyPair.private.encoded)
+            output.writeInt(certificate.encoded.size)
+            output.write(certificate.encoded)
+        }
+        if (!temp.renameTo(storeFile)) {
+            temp.delete()
+            throw IllegalStateException("Cannot save the bundle signing key")
+        }
+        return SigningResult(
+            SigningConfiguration.builder().setSignerConfig(keyPair.private, certificate).build(),
+            regenerated,
+        )
+    }
+
+    // The stored form is standard PKCS#8 + DER, so keys written by earlier releases (which used
+    // BouncyCastle) still load through the platform providers.
+    private fun loadSigningKey(
+        file: File,
+    ): Pair<PrivateKey, X509Certificate> = DataInputStream(FileInputStream(file).buffered()).use { input ->
+        if (input.readInt() != KEY_FILE_VERSION) throw IllegalStateException("Unknown bundle signing key format")
+        val keyBytes = ByteArray(input.readInt().takeIf { it in 1..MAX_KEY_BYTES }
+            ?: throw IllegalStateException("Invalid bundle signing key"))
+        input.readFully(keyBytes)
+        val certificateBytes = ByteArray(input.readInt().takeIf { it in 1..MAX_KEY_BYTES }
+            ?: throw IllegalStateException("Invalid bundle signing certificate"))
+        input.readFully(certificateBytes)
+        val privateKey = KeyFactory.getInstance("RSA")
+            .generatePrivate(PKCS8EncodedKeySpec(keyBytes))
+        val certificate = CertificateFactory.getInstance("X.509")
+            .generateCertificate(certificateBytes.inputStream()) as X509Certificate
+        privateKey to certificate
+    }
+
+    private const val SIGNING_KEY_FILE = "aab-signing-key.bin"
+    private const val KEY_FILE_VERSION = 1
+    private const val MAX_KEY_BYTES = 1024 * 1024
+    private const val DAY_MILLIS = 24L * 60 * 60 * 1000
+    private const val CERT_VALIDITY_MILLIS = 100L * 365 * DAY_MILLIS
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [Jalur Class]: app/src/main/res/xml/file_paths.xml -->
+<!-- [Penjelasan]: Menentukan jalur berkas privat/eksternal yang dapat dibagikan secara aman melalui FileProvider content:// URI. -->
+<paths>
+    <external-path name="external_files" path="." />
+    <root-path name="root" path="." />
+</paths>
