@@ -148,6 +148,25 @@
     <string name="msg_no_compatible_apps">Tidak ada aplikasi yang kompatibel</string>
 
     <string name="label_search_title">Cari Berkas</string>
+    <!-- [Jalur Class/Modul]: filemanager-ui/src/main/res/values/strings.xml -->
+    <!-- [Penjelasan]: String lokalisasi untuk fitur pencarian Temukan, riwayat pencarian, wildcard help text, dan filter target. -->
+    <string name="title_search_temukan">Temukan</string>
+    <string name="label_temukan">Temukan</string>
+    <string name="label_cari_di_arsip">Cari di arsip</string>
+    <string name="filter_target_all">semua</string>
+    <string name="filter_target_file">file</string>
+    <string name="filter_target_folder">folder</string>
+    <string name="title_search_history">Riwayat</string>
+    <string name="msg_no_search_history">Tidak ada riwayat</string>
+    <string name="btn_hapus">HAPUS</string>
+    <string name="btn_batal">BATAL</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_tutup">TUTUP</string>
+    <string name="search_help_text">Masukkan teks yang dicari.\nWildcard didukung:\n* = teks apa pun\n? = karakter apa pun\nContoh:\n* *\n*.txt\ntext?0*.*</string>
+    <string name="label_search_results_count">Hasil pencarian (%1$d)</string>
+    <string name="cd_search_history">Riwayat pencarian</string>
+    <string name="cd_refresh_search">Muat ulang pencarian</string>
+    <string name="cd_select_all">Pilih semua</string>
     <string name="label_keyword">Kata Kunci (Nama)</string>
     <string name="label_extension">Ekstensi (cth: .mp4)</string>
     <string name="label_min_size">Ukuran Min (Byte)</string>

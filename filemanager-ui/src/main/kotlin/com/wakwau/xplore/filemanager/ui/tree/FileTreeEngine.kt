@@ -288,16 +288,18 @@ class FileTreeEngine(
         // Remove existing search results root if any
         val filteredRoots = treeState.roots.filter { it.id != searchRootId }.toMutableList()
         
+        val countLabel = "${StorageConstants.SEARCH_RESULTS_PREFIX}(${items.size})"
         val rootItem = fileTreeItemFactory.createSearchResultsRoot(
             keyword = keyword
-        )
+        ).copy(name = countLabel)
         val searchRootNode = TreeNode(data = rootItem, id = searchRootId)
         
         // [Jalur Class/Modul]: filemanager-ui/src/main/kotlin/com/wakwau/xplore/filemanager/ui/tree/FileTreeEngine.kt
-        // [Penjelasan]: Menambahkan item hasil pencarian aktual tanpa menyuntikkan placeholder buatan ke search root tree node.
+        // [Penjelasan]: Menambahkan item hasil pencarian aktual dengan prefix ID search result agar UI dapat merender jalur direktori induk sesuai antarmuka X-plore.
         val comparator = getComparator()
         val sortedItems = items.map { item ->
-            TreeNode(data = item, id = "${StorageConstants.SEARCH_RESULT_ID_PREFIX}${item.location.path}")
+            val searchItem = item.copy(id = "${StorageConstants.SEARCH_RESULT_ID_PREFIX}${item.location.path}")
+            TreeNode(data = searchItem, id = searchItem.id)
         }.sortedWith(comparator)
         
         sortedItems.forEach { searchRootNode.addChild(it) }

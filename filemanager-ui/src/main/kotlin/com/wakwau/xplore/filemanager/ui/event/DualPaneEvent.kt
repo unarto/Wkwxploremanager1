@@ -88,8 +88,16 @@ sealed class DualPaneEvent {
     object SearchIconClicked : DualPaneEvent()
     object DismissSearchDialog : DualPaneEvent()
     data class ExecuteSearch(val query: com.wakwau.xplore.core.storage.search.FileSearchQuery) : DualPaneEvent()
-    data class SearchStarted(val keyword: String) : DualPaneEvent()
+    data class SearchStarted(
+        val keyword: String,
+        val searchType: com.wakwau.xplore.core.storage.search.SearchTargetType = com.wakwau.xplore.core.storage.search.SearchTargetType.ALL,
+        val searchInArchives: Boolean = false
+    ) : DualPaneEvent()
     data class SearchResultsUpdated(val keyword: String, val results: List<FileItem>) : DualPaneEvent()
+    // [Jalur Class/Modul]: filemanager-ui/src/main/kotlin/com/wakwau/xplore/filemanager/ui/event/DualPaneEvent.kt
+    // [Penjelasan]: Event untuk memperbarui daftar riwayat pencarian dan intent untuk menghapus seluruh riwayat.
+    data class SearchHistoryUpdated(val history: List<String>) : DualPaneEvent()
+    data class ClearSearchHistory(val dummy: Boolean = true) : DualPaneEvent()
     object SearchCompleted : DualPaneEvent()
     data class SearchFailed(val error: String) : DualPaneEvent()
     object SearchCancelled : DualPaneEvent()

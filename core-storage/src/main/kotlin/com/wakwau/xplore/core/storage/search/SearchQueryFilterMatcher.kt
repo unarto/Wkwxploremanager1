@@ -11,8 +11,42 @@ class SearchQueryFilterMatcher {
         val keyword = query.keyword.lowercase(Locale.getDefault())
         val itemNameLower = item.name.lowercase(Locale.getDefault())
 
-        if (keyword.isNotEmpty() && !itemNameLower.contains(keyword)) {
-            return false
+        if (keyword.isNotEmpty()) {
+            // [Jalur Class/Modul]: core-storage/src/main/kotlin/com/wakwau/xplore/core/storage/search/SearchQueryFilterMatcher.kt
+            // [Penjelasan]: Pencocokan pola kata kunci berbasis wildcard (* dan ?) dengan pengamanan karakter khusus regex.
+            val hasWildcard = keyword.contains("*") || keyword.contains("?")
+            if (hasWildcard) {
+                try {
+                    val pattern = buildString {
+                        append("^")
+                        for (ch in keyword) {
+                            when (ch) {
+                                '*' -> append(".*")
+                                '?' -> append(".")
+                                else -> {
+                                    if ("\\.[]{}()+^$|<>".contains(ch)) {
+                                        append('\\')
+                                    }
+                                    append(ch)
+                                }
+                            }
+                        }
+                        append("$")
+                    }
+                    val regex = Regex(pattern)
+                    if (!regex.matches(itemNameLower)) {
+                        return false
+                    }
+                } catch (e: Exception) {
+                    if (!itemNameLower.contains(keyword.replace("*", "").replace("?", ""))) {
+                        return false
+                    }
+                }
+            } else {
+                if (!itemNameLower.contains(keyword)) {
+                    return false
+                }
+            }
         }
 
         val isDir = item.type == com.wakwau.xplore.core.storage.model.FileType.DIRECTORY

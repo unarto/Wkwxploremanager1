@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -151,22 +152,53 @@ fun FileListItem(
         Spacer(modifier = Modifier.width(3.dp))
 
         val isInternalStorage = com.wakwau.xplore.filemanager.ui.icon.StorageIconMapper.isInternalStorage(item)
-        // File/Archive/Folder Icon
-        FileIcon(
-            category = category,
-            isDirectory = isDir,
-            isInternalStorage = isInternalStorage,
-            extension = ext,
-            size = 24.dp,
-            modifier = Modifier.clickable { onIconClick() }
-        )
+        val isSearchRoot = item.id == com.wakwau.xplore.core.storage.constant.StorageConstants.VIRTUAL_SEARCH_ROOT_ID
+        val isSearchResult = item.id.startsWith(com.wakwau.xplore.core.storage.constant.StorageConstants.SEARCH_RESULT_ID_PREFIX)
+
+        // [Jalur Class]: com.wakwau.xplore.filemanager.ui.list.FileListItem
+        // [Penjelasan]: Render ikon pencarian khusus untuk search root node dan ikon berkas biasa untuk item lainnya.
+        if (isSearchRoot) {
+            Icon(
+                imageVector = androidx.compose.material.icons.Icons.Default.Search,
+                contentDescription = null,
+                tint = colors.primary,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onIconClick() }
+            )
+        } else {
+            FileIcon(
+                category = category,
+                isDirectory = isDir,
+                isInternalStorage = isInternalStorage,
+                extension = ext,
+                size = 24.dp,
+                modifier = Modifier.clickable { onIconClick() }
+            )
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 
         // Name and Metadata (Date + Size)
         Column(modifier = Modifier.weight(1f)) {
+            // [Jalur Class]: com.wakwau.xplore.filemanager.ui.list.FileListItem
+            // [Penjelasan]: Lokalisasi judul hasil pencarian dengan format Hasil pencarian (N) dan menampilkan path folder asal berkas hasil pencarian sesuai antarmuka X-plore.
+            val displayName = if (isSearchRoot) {
+                if (item.name.contains("(") && item.name.contains(")")) {
+                    val countStr = item.name.substringAfter("(").substringBefore(")")
+                    val count = countStr.toIntOrNull() ?: 0
+                    androidx.compose.ui.res.stringResource(com.wakwau.xplore.filemanager.ui.R.string.label_search_results_count, count)
+                } else if (item.name.startsWith(com.wakwau.xplore.core.storage.constant.StorageConstants.SEARCH_RESULTS_PREFIX)) {
+                    val keyword = item.name.removePrefix(com.wakwau.xplore.core.storage.constant.StorageConstants.SEARCH_RESULTS_PREFIX).removeSurrounding("'")
+                    androidx.compose.ui.res.stringResource(com.wakwau.xplore.filemanager.ui.R.string.label_search_results_query, keyword)
+                } else {
+                    androidx.compose.ui.res.stringResource(com.wakwau.xplore.filemanager.ui.R.string.label_search_results)
+                }
+            } else {
+                item.name
+            }
             Text(
-                text = item.name,
+                text = displayName,
                 color = if (isInternalStorage || isDir || isArchive) colors.treeExpandArrow else colors.textPrimary,
                 fontWeight = if (isFocused || isDir || isArchive) FontWeight.SemiBold else FontWeight.Normal,
                 fontSize = 13.sp,
@@ -174,25 +206,39 @@ fun FileListItem(
                 overflow = TextOverflow.Ellipsis
             )
 
+            if (isSearchResult) {
+                val parentDir = item.location.path.substringBeforeLast('/', "")
+                val displayParent = if (parentDir.isNotEmpty()) "$parentDir/" else "/"
+                Text(
+                    text = displayParent,
+                    color = colors.textSecondary,
+                    fontSize = 10.5.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
             Spacer(modifier = Modifier.height(2.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = DateFormatter.formatShort(item.metadata.modifiedTime),
-                    color = colors.textSecondary,
-                    fontSize = 10.5.sp
-                )
-                if (!isDir) {
+            if (!isSearchRoot) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = ByteFormatter.format(item.metadata.size),
+                        text = DateFormatter.formatShort(item.metadata.modifiedTime),
                         color = colors.textSecondary,
-                        fontSize = 10.5.sp,
-                        fontWeight = FontWeight.Medium
+                        fontSize = 10.5.sp
                     )
+                    if (!isDir) {
+                        Text(
+                            text = ByteFormatter.format(item.metadata.size),
+                            color = colors.textSecondary,
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         }

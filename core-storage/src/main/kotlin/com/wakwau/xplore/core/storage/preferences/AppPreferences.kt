@@ -29,9 +29,26 @@ class AppPreferences private constructor(
 
     private val _settingsState = MutableStateFlow(loadSettings())
     override val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
+    
+    private val _searchHistoryState = MutableStateFlow(loadSearchHistory())
+    override val searchHistoryState: StateFlow<List<String>> = _searchHistoryState.asStateFlow()
 
     override fun getPreferencesState(): FilePreferencesState {
         return _preferencesState.value
+    }
+
+    private fun loadSearchHistory(): List<String> {
+        val json = mmkv.decodeString(StorageConstants.Preferences.KEY_SEARCH_HISTORY, "[]") ?: "[]"
+        return try {
+            val jsonArray = org.json.JSONArray(json)
+            val list = mutableListOf<String>()
+            for (i in 0 until jsonArray.length()) {
+                list.add(jsonArray.getString(i))
+            }
+            list
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     private fun loadSettings(): SettingsState {
@@ -119,5 +136,23 @@ class AppPreferences private constructor(
     override suspend fun setRootReadOnly(isReadOnly: Boolean) {
         mmkv.encode(StorageConstants.Preferences.KEY_ROOT_READ_ONLY, isReadOnly)
         _settingsState.value = _settingsState.value.copy(isRootReadOnly = isReadOnly)
+    }
+
+    override suspend fun addSearchHistory(keyword: String) {
+        if (keyword.isBlank()) return
+        val currentList = _searchHistoryState.value.toMutableList()
+        currentList.remove(keyword)
+        currentList.add(0, keyword)
+        if (currentList.size > 20) { // Limit history size
+            currentList.removeLast()
+        }
+        val jsonArray = org.json.JSONArray(currentList)
+        mmkv.encode(StorageConstants.Preferences.KEY_SEARCH_HISTORY, jsonArray.toString())
+        _searchHistoryState.value = currentList
+    }
+
+    override suspend fun clearSearchHistory() {
+        mmkv.encode(StorageConstants.Preferences.KEY_SEARCH_HISTORY, "[]")
+        _searchHistoryState.value = emptyList()
     }
 }

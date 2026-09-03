@@ -10,6 +10,7 @@ data class SearchUiState(
     val searchError: String? = null,
     val results: List<FileItem> = emptyList(),
     val hasSearched: Boolean = false,
-    val searchScope: com.wakwau.xplore.core.storage.model.StorageLocation? = null
+    val searchScope: com.wakwau.xplore.core.storage.model.StorageLocation? = null,
+    val searchHistory: List<String> = emptyList()
 )
 

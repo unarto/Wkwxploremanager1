@@ -12,6 +12,7 @@ interface AppPreferencesRepository {
     fun getPreferencesState(): FilePreferencesState
     
     val settingsState: StateFlow<SettingsState>
+    val searchHistoryState: StateFlow<List<String>>
     
     suspend fun setSortOrder(sortOrder: FileSortOrder)
     suspend fun setSortDirection(sortDirection: FileSortDirection)
@@ -23,4 +24,6 @@ interface AppPreferencesRepository {
     suspend fun setLanguage(language: AppLanguage)
     suspend fun setFileSystemAccessMode(mode: FileSystemAccessMode)
     suspend fun setRootReadOnly(isReadOnly: Boolean)
+    suspend fun addSearchHistory(keyword: String)
+    suspend fun clearSearchHistory()
 }

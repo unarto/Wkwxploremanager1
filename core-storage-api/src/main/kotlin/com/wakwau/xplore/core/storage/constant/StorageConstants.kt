@@ -41,6 +41,7 @@ object StorageConstants {
         const val KEY_LAYOUT_MODE = "pref_layout_mode"
         const val KEY_SHOW_HIDDEN_FILES = "pref_show_hidden_files"
         const val KEY_LAST_VISITED_PATH = "pref_last_visited_path"
+        const val KEY_SEARCH_HISTORY = "pref_search_history"
     }
 
     object Buffer {

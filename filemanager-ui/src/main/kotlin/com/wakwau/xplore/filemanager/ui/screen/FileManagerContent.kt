@@ -265,6 +265,7 @@ fun FileManagerContent(
                 onEvent(DualPaneEvent.ExecuteSearch(queryWithHidden)) 
             },
             onCancelSearch = { onEvent(DualPaneEvent.SearchCancelled) },
+            onClearHistory = { onEvent(DualPaneEvent.ClearSearchHistory()) },
             onFileClick = { item -> 
                 if (item.type == FileType.DIRECTORY) {
                     onEvent(DualPaneEvent.OpenLocation(state.activePanelId, item.location))

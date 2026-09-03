@@ -22,7 +22,7 @@ class SearchOperationHandler(
 
     suspend fun executeSearch(query: FileSearchQuery) = coroutineScope {
         searchJob?.cancel()
-        dispatch(DualPaneEvent.SearchStarted(query.keyword))
+        dispatch(DualPaneEvent.SearchStarted(query.keyword, query.searchType, query.searchInArchives))
         
         searchJob = searchFilesUseCase(query)
             .onEach { results ->

@@ -219,6 +219,10 @@ class DualPaneReducer {
             is DualPaneEvent.SearchCancelled -> {
                 state.copy(searchUiState = state.searchUiState.copy(isSearching = false))
             }
+            is DualPaneEvent.SearchHistoryUpdated -> {
+                state.copy(searchUiState = state.searchUiState.copy(searchHistory = event.history))
+            }
+            is DualPaneEvent.ClearSearchHistory -> state
 
             // [Jalur Class/Modul]: com.wakwau.xplore.filemanager.ui.reducer.DualPaneReducer
             // [Penjelasan]: Mengolah status izin penyimpanan dan pembaruan storage volumes secara pure immutability.

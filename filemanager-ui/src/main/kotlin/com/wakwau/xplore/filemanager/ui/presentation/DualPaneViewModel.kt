@@ -242,7 +242,13 @@ class DualPaneViewModel(
             }
             is DualPaneEvent.ExecuteSearch -> {
                 viewModelScope.launch {
+                    appPreferencesRepository.addSearchHistory(event.query.keyword)
                     searchOperationHandler.executeSearch(event.query)
+                }
+            }
+            is DualPaneEvent.ClearSearchHistory -> {
+                viewModelScope.launch {
+                    appPreferencesRepository.clearSearchHistory()
                 }
             }
             is DualPaneEvent.SearchCancelled -> {

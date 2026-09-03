@@ -361,4 +361,18 @@ class FakeAppPreferencesRepository(
     override suspend fun setRootReadOnly(isReadOnly: Boolean) {
         _settings.value = _settings.value.copy(isRootReadOnly = isReadOnly)
     }
+
+    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
+    override val searchHistoryState: StateFlow<List<String>> = _searchHistory.asStateFlow()
+
+    override suspend fun addSearchHistory(keyword: String) {
+        val current = _searchHistory.value.toMutableList()
+        current.remove(keyword)
+        current.add(0, keyword)
+        _searchHistory.value = current.take(20)
+    }
+
+    override suspend fun clearSearchHistory() {
+        _searchHistory.value = emptyList()
+    }
 }
